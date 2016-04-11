@@ -1,0 +1,260 @@
+%!PS-Adobe-2.0 EPSF-1.2
+%%Title: symbols.ps
+%%Creator: Floor.class 
+%%CreationDate: Sep 9 09:12
+%%For:molnar molnar
+%%Pages: 1
+%%DocumentFonts: Helvetica
+%%____BoundingBox: 282 373 500 665
+%%____BeginPreview: 219 291 1 291
+
+
+/red     { 1 0 0 setrgbcolor } def
+/green   { 0 1 0 setrgbcolor } def
+/forest   { 0 0.5 0 setrgbcolor } def
+/blue    { 0 0 1 setrgbcolor } def
+/magenta { 1 0 1 setrgbcolor } def
+/yellow  { 1 1 0 setrgbcolor } def
+/cyan    { 0 1 1 setrgbcolor } def
+/black   { 0 setgray } def
+/white   { 1 setgray } def
+
+% parameter definition
+/arrowLength 2.0 def % relative length of arrow
+/coneWidth 1.0 def
+/coneHeight 2.0 def
+
+/shadowOutline 0 def % 1 -> draws outline, 0 -> draws shadow in gray
+
+
+/square {
+  newpath
+  moveto
+  10 10 m 0 20 l -20 0 l 0 -20 l c
+} def
+
+
+/arrow {
+  % procedure arrow has four arguments: x, y, vx, vy 
+  /vy exch def /vx exch def /yy exch def  /xx exch def
+  /vl vx vx mul vy vy mul add sqrt def
+  /a arrowLength 8 div  vl div def
+  /b arrowLength vmax div def
+  /lx2 vx b mul def
+  /ly2 vy b mul def
+  /lx lx2 vx a mul add def
+  /ly ly2 vy a mul add def
+
+  /wx -1 vy a mul mul        def
+  /wy vx a mul               def
+  /wx2 -1 vy a mul mul 2 div def
+  /wy2 vx a mul 2 div        def
+  
+  newpath
+  xx wx2 add         yy wy2 add         moveto
+  xx lx2 add wx2 add yy ly2 add wy2 add lineto
+  xx lx2 add wx  add yy ly2 add wy  add lineto
+  xx lx  add         yy ly  add         lineto
+  xx lx2 add wx  sub yy ly2 add wy  sub lineto
+  xx lx2 add wx2 sub yy ly2 add wy2 sub lineto
+  xx wx2 sub         yy wy2 sub         lineto
+  closepath
+  0 1 0 setrgbcolor fill
+} def
+
+/robot {
+  gsave
+    /roboColor exch def 
+    /roboStatus exch def
+    /vy exch -1 mul def /vx exch def /yy exch -1 mul def  /xx exch def
+    /roboLabel exch def
+
+    0.01 setlinewidth
+
+    roboStatus 0 gt 
+    {
+      %% draw vector arrow
+      %%/vl vx vx mul vy vy mul add sqrt def
+      /a arrowLength 4 div def 
+      /b arrowLength vmax div def
+      /lx vx b mul def
+      /ly vy b mul def
+      /lx2 vx b a sub mul def
+      /ly2 vy b a sub mul def
+      
+      /wx -1 vy a mul mul        def
+      /wy vx a mul               def
+      /wx2 -1 vy a mul mul 3 div def
+      /wy2 vx a mul 3 div        def
+      
+      newpath
+      xx wx2 add         yy wy2 add         moveto
+      xx lx2 add wx2 add yy ly2 add wy2 add lineto
+      xx lx2 add wx  add yy ly2 add wy  add lineto
+      xx lx  add         yy ly  add         lineto
+      xx lx2 add wx  sub yy ly2 add wy  sub lineto
+      xx lx2 add wx2 sub yy ly2 add wy2 sub lineto
+      xx wx2 sub         yy wy2 sub         lineto
+      closepath
+      shadowOutline 0 eq 
+      { 0.7 0.7 0.7 setrgbcolor fill }
+      { black stroke } ifelse
+    } if
+%%% draw shadow
+    1 0.5 scale
+    newpath
+    xx yy 2 mul 0.5 0 360 arc 
+    1 2 scale
+    shadowOutline 0 eq 
+    { 0.7 0.7 0.7 setrgbcolor fill }
+    { black stroke } ifelse
+
+%%% draw body
+    1 0.5 scale
+    newpath
+    xx yy 0.3 add 2 mul 0.5 0 360 arc
+    xx yy 1.5 add 2 mul 0.5 0 360 arc
+    roboColor fill
+    newpath
+    xx 0.5 sub yy 0.3 add 2 mul moveto
+    xx 0.5 sub yy 1.5 add 2 mul lineto
+    xx 0.5 add yy 1.5 add 2 mul lineto
+    xx 0.5 add yy 0.3 add 2 mul lineto
+    closepath
+    roboColor fill
+    black
+    newpath
+    xx yy 0.3 add 2 mul 0.5 180 360 arc
+    xx yy 1.5 add 2 mul 0.5 0 360 arc
+    stroke
+    newpath
+    xx 0.5 sub yy 0.3 add 2 mul moveto
+    xx 0.5 sub yy 1.5 add 2 mul lineto
+    stroke
+    xx 0.5 add yy 1.5 add 2 mul moveto
+    xx 0.5 add yy 0.3 add 2 mul lineto
+    stroke
+    cyan
+    newpath
+    xx yy 0.4 add 2 mul 0.5 180 360 arc
+    stroke
+    1 2 scale
+%%% little status light on top
+    newpath
+    xx yy 1.7 add 0.2 0 360 arc
+    roboStatus 0 gt { green } { red } ifelse
+    fill
+    newpath
+    xx yy 1.7 add 0.2 0 360 arc
+    black stroke
+    /Helvetica-Bold findfont
+    0.8 scalefont
+    setfont
+    roboLabel dup stringwidth pop -2 div xx add yy 0.5 add moveto white show 
+  grestore
+} def
+
+/flag {
+  gsave
+    /yy exch -1 mul def /xx exch def /flagLabel exch def 
+    0.01 setlinewidth
+    black 
+    1 0.5 scale
+    newpath
+    xx yy 2 mul 0.5 95 85 arc stroke
+    1 2 scale
+    /Helvetica findfont
+    1.0 scalefont
+    setfont
+    newpath 
+    flagLabel stringwidth pop /w exch 0.4 add def
+    /h 1.2 def
+    xx yy moveto
+    xx yy 2 add h add lineto
+    stroke
+    /xo xx 0.2 add def
+    /yo yy 2 add def
+    newpath
+    xo       yo       moveto
+    xo       yo h add lineto
+    xo w add yo h add lineto
+    xo w add yo       lineto
+    xo       yo       lineto
+    closepath 
+    yellow fill
+    xo 0.2 add yo 0.2 add moveto
+    black flagLabel show
+    newpath
+    xo       yo       moveto
+    xo       yo h add lineto
+    xo w add yo h add lineto
+    xo w add yo       lineto
+    xo       yo       lineto
+    closepath black stroke 
+  grestore
+} def
+
+/cone {
+  % arguments: x, y
+  gsave
+    /py exch -1 mul def  
+    /px exch def
+    0.01 setlinewidth
+    newpath
+    px py moveto
+    px coneWidth 2 div sub py lineto
+    px py 2 coneWidth mul add lineto
+    px coneWidth 2 div add py lineto
+    closepath
+    red fill
+
+    1 0.5 scale
+    newpath
+    px py 2 mul coneWidth 2 div 180 360 arc
+    closepath red fill
+    1 2 scale
+
+    newpath
+    px coneWidth 2 div sub py moveto
+    px py 2 coneWidth mul add lineto
+    px coneWidth 2 div add py lineto
+    black stroke
+  
+    1 0.5 scale
+    newpath
+    px py 2 mul coneWidth 2 div 0 180 arcn
+    1 2 scale
+    black stroke
+  grestore
+} def
+
+/bluedot {
+  gsave 
+    newpath
+    dup /obsred exch def 0 1 obsred sub setrgbcolor
+    -1 mul %% reverse y
+    0.1 0 360 arc fill
+  grestore
+} def
+
+/greendot {
+  gsave 
+    newpath
+    dup /obsred exch def 1 obsred sub 2 div 0 setrgbcolor
+    -1 mul %% reverse y
+    0.1 0 360 arc fill
+  grestore
+} def
+
+/D { 
+  bluedot
+} def
+
+/G { 
+  greendot
+} def
+
+4 72 mul 5.5 72 mul translate
+10 10 scale
+
+
